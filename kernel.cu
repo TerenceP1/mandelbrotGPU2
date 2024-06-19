@@ -36,11 +36,11 @@ __device__ void InitDecimal(Decimal* d) {
 
 __device__ void AddDecimal(Decimal* a, Decimal* b, Decimal* c) {
     // Adds a and b and stores result in c
-    unsigned long pass = 0;
+    unsigned long long pass = 0;
     int decp = ((unsigned int*)a)[0];
     for (int i = decp + 1;i > 0;i--) {
         bool pas = (pass && 0x100000000l) >> 8;
-        pass = (unsigned long)(((unsigned int*)a)[i]) + (unsigned long)(((unsigned int*)b)[i]);
+        pass = (unsigned long long)(((unsigned int*)a)[i]) + (unsigned long)(((unsigned int*)b)[i]);
         if (pas) {
             pass++;
         }
@@ -51,28 +51,77 @@ __device__ void AddDecimal(Decimal* a, Decimal* b, Decimal* c) {
 __device__ void NegDecimal(Decimal* a, Decimal* b) {
     // Negates a and stores result in b
     int decp = ((unsigned int*)a)[0];
+    for (int i = 1;i < decp + 2;i++) {
+        ((unsigned int*)b)[i] = ~(((unsigned int*)a)[i]);
+    }
+    for (int i = decp + 1;i > 0;i--) {
+        ((unsigned int*)b)[i]++;
+        if ((((unsigned int*)b)[i]) != 0) {
+            break;
+        }
+    }
 }
 
 __device__ void SubDecimal(Decimal* a, Decimal* b, Decimal* c) {
     // c=a-b
-    bool pass;
-    unsigned int subR;
+    NegDecimal(b, b);
+    unsigned long long pass = 0;
     int decp = ((unsigned int*)a)[0];
-    for (int i = decp;i > 1;i--) {
-        subR = (((unsigned int*)a)[i]) - (((unsigned int*)b)[i]);
-        if ((((unsigned int*)a)[i]) < (((unsigned int*)b)[i])) {
-            pass = true;
-        }
-        if (pass) {
-            subR--;
+    for (int i = decp + 1;i > 0;i--) {
+        bool pas = (pass && 0x100000000l) >> 32;
+        pass = (unsigned long long)(((unsigned int*)a)[i]) + (unsigned long long)(((unsigned int*)b)[i]);
+        if (pas) {
+            pass++;
         }
         ((unsigned int*)c)[i] = (unsigned int)pass;
     }
-    subR = (((int*)a)[1]) - (((int*)b)[1]);
-    if (pass) {
-        subR--;
+    NegDecimal(b, b);
+}
+
+__device__ void MulDecimal(Decimal* a, Decimal* b, Decimal* c) {
+    // c=a*b
+    // Consumes auxillary space
+    int decp = ((unsigned int*)a)[0];
+    unsigned int* temp = new unsigned int[decp * 2 + 2];
+    unsigned int* ai = *((unsigned int**)a);
+    unsigned int* bi = *((unsigned int**)b);
+    unsigned int* ci = *((unsigned int**)c);
+    for (int i = 0;i <= decp * 2;i++) {
+        temp[i] = 0;
     }
-    ((int*)c)[1] = (int)subR;
+    for (int i = 0;i < decp;i++) {
+        for (int j = 0;j < decp;j++) {
+            unsigned long long res = ((unsigned long long)(ai[i])) + ((unsigned long long)(bi[i]));
+            unsigned int gRes = (res << 32) >> 32;
+            unsigned int lRes = res;
+            // Add lres
+            temp[i + j] += lRes;
+            if (temp[i + j] < lRes) {
+                for (int k = i + j;k < decp * 2 + 2;k++) {
+                    temp[k]++;
+                    if (temp[k] != 0) {
+                        break;
+                    }
+                }
+            }
+            // Add gres
+            temp[i + j + 1] += gRes;
+            if (temp[i + j + 1] < lRes) {
+                for (int k = i + j + 1;k < decp * 2 + 2;k++) {
+                    temp[k]++;
+                    if (temp[k] != 0) {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    int ind = 1;
+    for (int i = decp * 2;i > decp - 1;i--) {
+        ci[i] = ind;
+        ind++;
+    }
+    delete[] temp;
 }
 
 __global__ void calcRow(CUdeviceptr arr) {
