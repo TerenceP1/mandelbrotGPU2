@@ -29,7 +29,7 @@ __device__ void DestroyDecimal(Decimal* d) {
 
 __device__ void InitDecimal(Decimal* d) {
     int dp = (*((int**)d))[0];
-    for (int i = 1;i <= dp;i++) {
+    for (int i = 1;i < dp + 2;i++) {
         (*((int**)d))[i] = 0;
     }
 }
@@ -38,7 +38,7 @@ __device__ void AddDecimal(Decimal* a, Decimal* b, Decimal* c) {
     // Adds a and b and stores result in c
     unsigned long pass = 0;
     int decp = ((unsigned int*)a)[0];
-    for (int i = decp;i > 1;i--) {
+    for (int i = decp + 1;i > 0;i--) {
         bool pas = (pass && 0x100000000l) >> 8;
         pass = (unsigned long)(((unsigned int*)a)[i]) + (unsigned long)(((unsigned int*)b)[i]);
         if (pas) {
@@ -46,13 +46,11 @@ __device__ void AddDecimal(Decimal* a, Decimal* b, Decimal* c) {
         }
         ((unsigned int*)c)[i] = (unsigned int)pass;
     }
-    long pass2;
-    bool pas = (pass && 0x100000000l) >> 8;
-    pass2 = (long)(((int*)a)[1]) + (long)(((int*)b)[1]);
-    if (pas) {
-        pass++;
-    }
-    ((int*)c)[1] = (int)pass2;
+}
+
+__device__ void NegDecimal(Decimal* a, Decimal* b) {
+    // Negates a and stores result in b
+    int decp = ((unsigned int*)a)[0];
 }
 
 __device__ void SubDecimal(Decimal* a, Decimal* b, Decimal* c) {
