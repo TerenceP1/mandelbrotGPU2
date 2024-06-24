@@ -15,5 +15,8 @@ The Mandelbrot Set was discovered by Benoit Mandelbrot. Each pixel is a complex 
 ## Dependencies
 
 * Python 3
+
+
+  
 That's all for now. Packages will auto-install (To be implemented)
 Python program to be implemented
