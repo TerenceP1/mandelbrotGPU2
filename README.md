@@ -27,4 +27,4 @@ Python program to be implemented
 * Finish the binary conversion algorithm
 * Make a python program to convert raw data to images
 * Finish the io system
-* Note: Program has nit been tested nor debugged. It is still in its early developmental stages.
+* Note: Program has not been tested nor debugged. It is still in its early developmental stages.
