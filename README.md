@@ -20,3 +20,11 @@ The Mandelbrot Set was discovered by Benoit Mandelbrot. Each pixel is a complex 
   
 That's all for now. Packages will auto-install (To be implemented)
 Python program to be implemented
+
+
+## My todo list
+
+* Finish the binary conversion algorithm
+* Make a python program to convert raw data to images
+* Finish the io system
+* Note: Program has nit been tested nor debugged. It is still in its early developmental stages.
