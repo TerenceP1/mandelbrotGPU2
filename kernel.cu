@@ -39,8 +39,8 @@ __device__ void AddDecimal(Decimal* a, Decimal* b, Decimal* c) {
     unsigned long long pass = 0;
     int decp = ((unsigned int*)a)[0];
     for (int i = decp + 1;i > 0;i--) {
-        bool pas = (pass && 0x100000000l) >> 8;
-        pass = (unsigned long long)(((unsigned int*)a)[i]) + (unsigned long)(((unsigned int*)b)[i]);
+        bool pas = (pass && 0x100000000l) >> 32;
+        pass = (unsigned long long)(((unsigned int*)a)[i]) + (unsigned long long)(((unsigned int*)b)[i]);
         if (pas) {
             pass++;
         }
