@@ -86,18 +86,18 @@ __device__ void MulDecimal(Decimal* a, Decimal* b, Decimal* c) {
     unsigned int* ai = *((unsigned int**)a);
     unsigned int* bi = *((unsigned int**)b);
     unsigned int* ci = *((unsigned int**)c);
-    for (int i = 0;i <= decp * 2;i++) {
+    for (int i = 0;i < decp * 2 + 2;i++) {
         temp[i] = 0;
     }
     for (int i = 0;i < decp;i++) {
         for (int j = 0;j < decp;j++) {
-            unsigned long long res = ((unsigned long long)(ai[i])) + ((unsigned long long)(bi[i]));
-            unsigned int gRes = (res << 32) >> 32;
+            unsigned long long res = ((unsigned long long)(ai[i + 1])) * ((unsigned long long)(bi[i + 1]));
+            unsigned int gRes = (res >> 32);
             unsigned int lRes = res;
             // Add lres
             temp[i + j] += lRes;
             if (temp[i + j] < lRes) {
-                for (int k = i + j;k < decp * 2 + 2;k++) {
+                for (int k = i + j + 1;k < decp * 2 + 2;k++) {
                     temp[k]++;
                     if (temp[k] != 0) {
                         break;
@@ -106,8 +106,8 @@ __device__ void MulDecimal(Decimal* a, Decimal* b, Decimal* c) {
             }
             // Add gres
             temp[i + j + 1] += gRes;
-            if (temp[i + j + 1] < lRes) {
-                for (int k = i + j + 1;k < decp * 2 + 2;k++) {
+            if (temp[i + j + 1] < gRes) {
+                for (int k = i + j + 2;k < decp * 2 + 2;k++) {
                     temp[k]++;
                     if (temp[k] != 0) {
                         break;
@@ -117,8 +117,8 @@ __device__ void MulDecimal(Decimal* a, Decimal* b, Decimal* c) {
         }
     }
     int ind = 1;
-    for (int i = decp * 2;i > decp - 1;i--) {
-        ci[i] = ind;
+    for (int i = decp * 2;i >= decp;i--) {
+        ci[ind] = temp[i];
         ind++;
     }
     delete[] temp;
