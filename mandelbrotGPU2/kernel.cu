@@ -157,7 +157,7 @@ int main()
         return res;
     }
     cout << "Malloc\n";
-    calcRow <<<1, ySz >>> (arr);
+    //calcRow <<<1, ySz >>> (arr);
     cudaDeviceSynchronize();
     cuMemFree(arr);
     cout << "Done!";
