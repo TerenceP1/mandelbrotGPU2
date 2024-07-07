@@ -1,1 +1,4 @@
-﻿echo Sorry but I told you it's incomplete!
+@echo off
+echo This is incomplete and is in testing. Do not use.
+cd internal
+DeviceSelecter.exe
