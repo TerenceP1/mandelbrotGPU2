@@ -131,7 +131,7 @@ __device__ void Dv2Decimal(Decimal* a) {
     unsigned int* ai = *((unsigned int**)a);
     unsigned int* decp = ai[0];
     for (int i = decp;i > 0;i--) {
-        ai[i] = (ai[i] >> 31) | (ai[i - 1] << 31);
+        ai[i] = (ai[i] >> 1) | (ai[i - 1] << 31);
     }
     ai[0] >>= 1;
 }
