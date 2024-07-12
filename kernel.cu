@@ -130,7 +130,9 @@ __device__ void RbsDecimal(Decimal* a, unsigned int bits) {
     // Right bit shift a by bits
     unsigned int* ai = *((unsigned int**)a);
     unsigned int* decp = ai[0];
-    for (int i = 1;i <= decp;i++) {}
+    for (int i = bits / 4 + 1;i <= decp;i++) {
+        
+    }
     for (int i = 0;i < bits / 4;i++) {
         ai[i + 1] = 0;
     }
