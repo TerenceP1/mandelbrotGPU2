@@ -130,10 +130,26 @@ __device__ void Dv2Decimal(Decimal* a) {
     // Divide a by 2 (via bitshifting)
     unsigned int* ai = *((unsigned int**)a);
     unsigned int* decp = ai[0];
-    for (int i = decp;i > 0;i--) {
+    for (int i = decp + 1;i > 0;i--) {
         ai[i] = (ai[i] >> 1) | (ai[i - 1] << 31);
     }
     ai[0] >>= 1;
+}
+
+__device__ int cmpDecimal(Decimal* a, Decimal* b) {
+    // Return 1 if a>b, 0 if a==b, and -1 if a<b
+    unsigned int* ai = *((unsigned int**)a);
+    unsigned int* bi = *((unsigned int**)b);
+    unsigned int decp = ai[0];
+    for (int i = 1;i < decp + 1;i++) {
+        if (ai[i] > bi[i]) {
+            return 1;
+        }
+        if (ai[i] < bi[i]) {
+            return -1;
+        }
+    }
+    return 0;
 }
 
 __global__ void calcRow(CUdeviceptr arr, char* re, char* im, int reLen, int imLen, int prec) {
