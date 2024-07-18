@@ -91,9 +91,9 @@ __device__ void MulDecimal(Decimal* a, Decimal* b, Decimal* c) {
     for (int i = 0;i <= decp * 2;i++) {
         temp[i] = 0;
     }
-    for (int i = 0;i < decp;i++) {
-        for (int j = 0;j < decp;j++) {
-            unsigned long long res = ((unsigned long long)(ai[i])) + ((unsigned long long)(bi[i]));
+    for (int i = 0;i <= decp;i++) {
+        for (int j = 0;j <= decp;j++) {
+            unsigned long long res = ((unsigned long long)(ai[i + 1])) + ((unsigned long long)(bi[i + 1]));
             unsigned int gRes = (res << 32) >> 32;
             unsigned int lRes = res;
             // Add lres
@@ -141,7 +141,7 @@ __device__ int cmpDecimal(Decimal* a, Decimal* b) {
     unsigned int* ai = *((unsigned int**)a);
     unsigned int* bi = *((unsigned int**)b);
     unsigned int decp = ai[0];
-    for (int i = 1;i < decp + 1;i++) {
+    for (int i = 1;i < decp + 2;i++) {
         if (ai[i] > bi[i]) {
             return 1;
         }
