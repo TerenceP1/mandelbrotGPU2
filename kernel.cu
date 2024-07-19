@@ -136,12 +136,20 @@ __device__ void Dv2Decimal(Decimal* a) {
     ai[0] >>= 1;
 }
 
-__device__ int cmpDecimal(Decimal* a, Decimal* b) {
+__device__ int CmpDecimal(Decimal* a, Decimal* b) {
     // Return 1 if a>b, 0 if a==b, and -1 if a<b
     unsigned int* ai = *((unsigned int**)a);
     unsigned int* bi = *((unsigned int**)b);
     unsigned int decp = ai[0];
-    for (int i = 1;i < decp + 2;i++) {
+    int af = ai[1];
+    int bf = bi[1];
+    if (af > bf) {
+        return 1;
+    }
+    if (af < bf) {
+        return -1;
+    }
+    for (int i = 2;i < decp + 2;i++) {
         if (ai[i] > bi[i]) {
             return 1;
         }
