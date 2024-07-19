@@ -168,6 +168,11 @@ __device__ void RecDecimal(unsigned int a, Decimal* b) {
     Decimal tmp;
     CreateDecimal(&tmp, decp);
     InitDecimal(&tmp);
+    Decimal inc;
+    CreateDecimal(&inc, decp);
+    InitDecimal(&inc);
+    ((unsigned int*)inc)[1] = a;
+    
 }
 
 __global__ void calcRow(CUdeviceptr arr, char* re, char* im, int reLen, int imLen, int prec) {
