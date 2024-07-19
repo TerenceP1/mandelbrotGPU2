@@ -172,7 +172,15 @@ __device__ void RecDecimal(unsigned int a, Decimal* b) {
     CreateDecimal(&inc, decp);
     InitDecimal(&inc);
     ((unsigned int*)inc)[1] = a;
-    
+    Decimal one;
+    CreateDecimal(&one, decp);
+    InitDecimal(&one);
+    ((unsigned int*)one)[1] = 1;
+    for (int i = 1;i < decp + 2;i++) {
+        for (int j = 31;j >= 0;j--) {
+
+        }
+    }
 }
 
 __global__ void calcRow(CUdeviceptr arr, char* re, char* im, int reLen, int imLen, int prec) {
