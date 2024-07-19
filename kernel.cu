@@ -160,6 +160,16 @@ __device__ int CmpDecimal(Decimal* a, Decimal* b) {
     return 0;
 }
 
+__device__ void RecDecimal(unsigned int a, Decimal* b) {
+    // Take reciprical of a and store it in b
+    // Consumes auxillary space
+    unsigned int* bi = *((unsigned int**)b;
+    unsigned int decp = bi[0];
+    Decimal tmp;
+    CreateDecimal(&tmp, decp);
+    InitDecimal(&tmp);
+}
+
 __global__ void calcRow(CUdeviceptr arr, char* re, char* im, int reLen, int imLen, int prec) {
     // Get 0.1 in binary to convert base 10 to binary
     Decimal tenth;
