@@ -177,9 +177,19 @@ __device__ void RecDecimal(unsigned int a, Decimal* b) {
     CreateDecimal(&one, decp);
     InitDecimal(&one);
     ((unsigned int*)one)[1] = 1;
+    bi[1] = 0;
     for (int i = 2;i < decp + 2;i++) {
         for (int j = 31;j >= 0;j--) {
-            
+            unsigned int pl = (1u << j);
+            AddDecimal(&tmp, &inc, &tmp);
+            if (CmpDecimal(&tmp, &one) == 1) {
+                SubDecimal(&tmp, &inc, &tmp);
+                bi[i] &&= ~pl;
+            }
+            else {
+                bi[i] ||= pl;
+            }
+            Dv2Decimal(&tmp);
         }
     }
 }
