@@ -41,7 +41,7 @@ __device__ void AddDecimal(Decimal* a, Decimal* b, Decimal* c) {
     unsigned long long pass = 0;
     int decp = ((unsigned int*)a)[0];
     for (int i = decp + 1;i > 0;i--) {
-        bool pas = (pass && 0x100000000l) >> 8;
+        bool pas = (pass && 0x100000000l) >> 32;
         pass = (unsigned long long)(((unsigned int*)a)[i]) + (unsigned long)(((unsigned int*)b)[i]);
         if (pas) {
             pass++;
@@ -93,7 +93,7 @@ __device__ void MulDecimal(Decimal* a, Decimal* b, Decimal* c) {
     }
     for (int i = 0;i <= decp;i++) {
         for (int j = 0;j <= decp;j++) {
-            unsigned long long res = ((unsigned long long)(ai[i + 1])) + ((unsigned long long)(bi[i + 1]));
+            unsigned long long res = ((unsigned long long)(ai[i + 1])) * ((unsigned long long)(bi[i + 1]));
             unsigned int gRes = (res << 32) >> 32;
             unsigned int lRes = res;
             // Add lres
@@ -163,7 +163,7 @@ __device__ int CmpDecimal(Decimal* a, Decimal* b) {
 __device__ void RecDecimal(unsigned int a, Decimal* b) {
     // Take reciprical of a and store it in b
     // Consumes auxillary space
-    unsigned int* bi = *((unsigned int**)b;
+    unsigned int* bi = *((unsigned int**)b);
     unsigned int decp = bi[0];
     Decimal tmp;
     CreateDecimal(&tmp, decp);
@@ -184,10 +184,10 @@ __device__ void RecDecimal(unsigned int a, Decimal* b) {
             AddDecimal(&tmp, &inc, &tmp);
             if (CmpDecimal(&tmp, &one) == 1) {
                 SubDecimal(&tmp, &inc, &tmp);
-                bi[i] &&= ~pl;
+                bi[i] &= ~pl;
             }
             else {
-                bi[i] ||= pl;
+                bi[i] |= pl;
             }
             Dv2Decimal(&tmp);
         }
