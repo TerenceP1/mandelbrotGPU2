@@ -41,7 +41,7 @@ __device__ void AddDecimal(Decimal* a, Decimal* b, Decimal* c) {
     unsigned long long pass = 0;
     int decp = ((unsigned int*)a)[0];
     for (int i = decp + 1;i > 0;i--) {
-        bool pas = (pass && 0x100000000l) >> 8;
+        bool pas = (pass & 0x100000000l) >> 32;
         pass = (unsigned long long)(((unsigned int*)a)[i]) + (unsigned long)(((unsigned int*)b)[i]);
         if (pas) {
             pass++;
@@ -70,7 +70,7 @@ __device__ void SubDecimal(Decimal* a, Decimal* b, Decimal* c) {
     unsigned long long pass = 0;
     int decp = ((unsigned int*)a)[0];
     for (int i = decp + 1;i > 0;i--) {
-        bool pas = (pass && 0x100000000l) >> 32;
+        bool pas = (pass & 0x100000000l) >> 32;
         pass = (unsigned long long)(((unsigned int*)a)[i]) + (unsigned long long)(((unsigned int*)b)[i]);
         if (pas) {
             pass++;
@@ -91,9 +91,9 @@ __device__ void MulDecimal(Decimal* a, Decimal* b, Decimal* c) {
     for (int i = 0;i <= decp * 2;i++) {
         temp[i] = 0;
     }
-    for (int i = 0;i < decp;i++) {
-        for (int j = 0;j < decp;j++) {
-            unsigned long long res = ((unsigned long long)(ai[i])) + ((unsigned long long)(bi[i]));
+    for (int i = 0;i <= decp;i++) {
+        for (int j = 0;j <= decp;j++) {
+            unsigned long long res = ((unsigned long long)(ai[i + 1])) * ((unsigned long long)(bi[i + 1]));
             unsigned int gRes = (res << 32) >> 32;
             unsigned int lRes = res;
             // Add lres
@@ -124,6 +124,74 @@ __device__ void MulDecimal(Decimal* a, Decimal* b, Decimal* c) {
         ind++;
     }
     delete[] temp;
+}
+
+__device__ void Dv2Decimal(Decimal* a) {
+    // Divide a by 2 (via bitshifting)
+    unsigned int* ai = *((unsigned int**)a);
+    unsigned int* decp = ai[0];
+    for (int i = decp + 1;i > 0;i--) {
+        ai[i] = (ai[i] >> 1) | (ai[i - 1] << 31);
+    }
+    ai[0] >>= 1;
+}
+
+__device__ int CmpDecimal(Decimal* a, Decimal* b) {
+    // Return 1 if a>b, 0 if a==b, and -1 if a<b
+    unsigned int* ai = *((unsigned int**)a);
+    unsigned int* bi = *((unsigned int**)b);
+    unsigned int decp = ai[0];
+    int af = ai[1];
+    int bf = bi[1];
+    if (af > bf) {
+        return 1;
+    }
+    if (af < bf) {
+        return -1;
+    }
+    for (int i = 2;i < decp + 2;i++) {
+        if (ai[i] > bi[i]) {
+            return 1;
+        }
+        if (ai[i] < bi[i]) {
+            return -1;
+        }
+    }
+    return 0;
+}
+
+__device__ void RecDecimal(unsigned int a, Decimal* b) {
+    // Take reciprical of a and store it in b
+    // Consumes auxillary space
+    unsigned int* bi = *((unsigned int**)b);
+    unsigned int decp = bi[0];
+    Decimal tmp;
+    CreateDecimal(&tmp, decp);
+    InitDecimal(&tmp);
+    Decimal inc;
+    CreateDecimal(&inc, decp);
+    InitDecimal(&inc);
+    ((unsigned int*)inc)[1] = a;
+    Dv2Decimal(inc);
+    Decimal one;
+    CreateDecimal(&one, decp);
+    InitDecimal(&one);
+    ((unsigned int*)one)[1] = 1;
+    bi[1] = 0;
+    for (int i = 2;i < decp + 2;i++) {
+        for (int j = 31;j >= 0;j--) {
+            unsigned int pl = (1u << j);
+            AddDecimal(&tmp, &inc, &tmp);
+            if (CmpDecimal(&tmp, &one) == 1) {
+                SubDecimal(&tmp, &inc, &tmp);
+                bi[i] &= ~pl;
+            }
+            else {
+                bi[i] |= pl;
+            }
+            Dv2Decimal(&tmp);
+        }
+    }
 }
 
 __global__ void calcRow(CUdeviceptr arr, char* re, char* im, int reLen, int imLen, int prec) {
