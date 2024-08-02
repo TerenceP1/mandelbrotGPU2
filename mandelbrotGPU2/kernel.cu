@@ -129,7 +129,7 @@ __device__ void MulDecimal(Decimal* a, Decimal* b, Decimal* c) {
 __device__ void Dv2Decimal(Decimal* a) {
     // Divide a by 2 (via bitshifting)
     unsigned int* ai = *((unsigned int**)a);
-    unsigned int* decp = ai[0];
+    unsigned int decp = ai[0];
     for (int i = decp + 1;i > 0;i--) {
         ai[i] = (ai[i] >> 1) | (ai[i - 1] << 31);
     }
@@ -172,7 +172,7 @@ __device__ void RecDecimal(unsigned int a, Decimal* b) {
     CreateDecimal(&inc, decp);
     InitDecimal(&inc);
     ((unsigned int*)inc)[1] = a;
-    Dv2Decimal(inc);
+    Dv2Decimal(&inc);
     Decimal one;
     CreateDecimal(&one, decp);
     InitDecimal(&one);
@@ -192,22 +192,163 @@ __device__ void RecDecimal(unsigned int a, Decimal* b) {
             Dv2Decimal(&tmp);
         }
     }
+    DestroyDecimal(&tmp);
+    DestroyDecimal(&inc);
+    DestroyDecimal(&one);
+}
+
+__device__ void RecDecimal(unsigned int a, unsigned int pw, Decimal* b) {
+    // Take reciprical of a and store it in b
+    // Consumes auxillary space
+    unsigned int* bi = *((unsigned int**)b);
+    unsigned int decp = bi[0];
+    Decimal tmp;
+    CreateDecimal(&tmp, decp);
+    InitDecimal(&tmp);
+    Decimal inc;
+    CreateDecimal(&inc, decp);
+    InitDecimal(&inc);
+    ((unsigned int*)inc)[1] = a;
+    Dv2Decimal(&inc);
+    Decimal one;
+    CreateDecimal(&one, decp);
+    InitDecimal(&one);
+    ((unsigned int*)one)[1] = 1;
+    bi[1] = 0;
+    for (int i = 2;i < decp + 2;i++) {
+        for (int j = 31;j >= 0;j--) {
+            unsigned int pl = (1u << j);
+            AddDecimal(&tmp, &inc, &tmp);
+            if (CmpDecimal(&tmp, &one) == 1) {
+                SubDecimal(&tmp, &inc, &tmp);
+                bi[i] &= ~pl;
+            }
+            else {
+                bi[i] |= pl;
+            }
+            Dv2Decimal(&tmp);
+        }
+    }
+    // Shift by pw
+    for (int i = decp + 1;i > pw;i--) {
+        bi[i] = bi[i - pw];
+    }
+    DestroyDecimal(&tmp);
+    DestroyDecimal(&inc);
+    DestroyDecimal(&one);
+}
+
+// Reduced memory allocation functions (names have Cmem prefix):
+// Any temporary use arrays must be created and destroyed properly
+// Cmem stands for Constant MEMory
+
+__device__ void CmemMulDecimal(Decimal* a, Decimal* b, Decimal* c, unsigned int* temp) {
+    // c=a*b
+    // temp must be length decp*2+2
+    int decp = ((unsigned int*)a)[0];
+    unsigned int* ai = *((unsigned int**)a);
+    unsigned int* bi = *((unsigned int**)b);
+    unsigned int* ci = *((unsigned int**)c);
+    for (int i = 0;i <= decp * 2;i++) {
+        temp[i] = 0;
+    }
+    for (int i = 0;i <= decp;i++) {
+        for (int j = 0;j <= decp;j++) {
+            unsigned long long res = ((unsigned long long)(ai[i + 1])) * ((unsigned long long)(bi[i + 1]));
+            unsigned int gRes = (res << 32) >> 32;
+            unsigned int lRes = res;
+            // Add lres
+            temp[i + j] += lRes;
+            if (temp[i + j] < lRes) {
+                for (int k = i + j;k < decp * 2 + 2;k++) {
+                    temp[k]++;
+                    if (temp[k] != 0) {
+                        break;
+                    }
+                }
+            }
+            // Add gres
+            temp[i + j + 1] += gRes;
+            if (temp[i + j + 1] < lRes) {
+                for (int k = i + j + 1;k < decp * 2 + 2;k++) {
+                    temp[k]++;
+                    if (temp[k] != 0) {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    int ind = 1;
+    for (int i = decp * 2;i > decp - 1;i--) {
+        ci[i] = ind;
+        ind++;
+    }
+}
+
+__device__ void CmemRecDecimal(unsigned int a, Decimal* b, Decimal tmp, Decimal inc, Decimal one) {
+    // Take reciprical of a and store it in b
+    // Consumes auxillary space
+    // one must be set to one and all must have precision decp
+    unsigned int* bi = *((unsigned int**)b);
+    unsigned int decp = bi[0];
+    InitDecimal(&tmp);
+    InitDecimal(&inc);
+    ((unsigned int*)inc)[1] = a;
+    Dv2Decimal(&inc);
+    bi[1] = 0;
+    for (int i = 2;i < decp + 2;i++) {
+        for (int j = 31;j >= 0;j--) {
+            unsigned int pl = (1u << j);
+            AddDecimal(&tmp, &inc, &tmp);
+            if (CmpDecimal(&tmp, &one) == 1) {
+                SubDecimal(&tmp, &inc, &tmp);
+                bi[i] &= ~pl;
+            }
+            else {
+                bi[i] |= pl;
+            }
+            Dv2Decimal(&tmp);
+        }
+    }
+}
+
+__device__ void RecDecimal(unsigned int a, unsigned int pw, Decimal* b, Decimal tmp, Decimal inc, Decimal one) {
+    // Take reciprical of a * 2 ^ (pw * 32) and store it in b
+    // Consumes auxillary space
+    unsigned int* bi = *((unsigned int**)b);
+    unsigned int decp = bi[0];
+    InitDecimal(&tmp);
+    InitDecimal(&inc);
+    ((unsigned int*)inc)[1] = a;
+    Dv2Decimal(&inc);
+    Decimal one;
+    CreateDecimal(&one, decp);
+    InitDecimal(&one);
+    ((unsigned int*)one)[1] = 1;
+    bi[1] = 0;
+    for (int i = 2;i < decp + 2;i++) {
+        for (int j = 31;j >= 0;j--) {
+            unsigned int pl = (1u << j);
+            AddDecimal(&tmp, &inc, &tmp);
+            if (CmpDecimal(&tmp, &one) == 1) {
+                SubDecimal(&tmp, &inc, &tmp);
+                bi[i] &= ~pl;
+            }
+            else {
+                bi[i] |= pl;
+            }
+            Dv2Decimal(&tmp);
+        }
+    }
+    // Shift by pw
+    for (int i = decp + 1;i > pw;i--) {
+        bi[i] = bi[i - pw];
+    }
 }
 
 __global__ void calcRow(CUdeviceptr arr, char* re, char* im, int reLen, int imLen, int prec) {
-    // Get 0.1 in binary to convert base 10 to binary
-    Decimal tenth;
-    CreateDecimal(&tenth, prec);
-    InitDecimal(&tenth);
-    ((unsigned int*)tenth)[1] = 0x00000000U;
-    ((unsigned int*)tenth)[2] = 0x19999999U;
-    for (int i = 3;i < prec + 2;i++) {
-        ((unsigned int*)tenth)[i] = 0x99999999U;
-    }
-    // Convert the re from string to binary decimal
-    Decimal dRe;
-    CreateDecimal(&dRe, prec);
-    InitDecimal(&dRe);
+    
 }
 
 int main()
