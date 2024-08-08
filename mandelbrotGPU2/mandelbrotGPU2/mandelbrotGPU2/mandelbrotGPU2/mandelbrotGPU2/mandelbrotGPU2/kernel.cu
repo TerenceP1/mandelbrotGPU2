@@ -10,6 +10,9 @@ using namespace std;
 
 typedef void* Decimal;
 
+#define xSz 4096
+#define ySz 2160
+
 // High decimal presision code:
 // Note: Decimals are always signed
 // Note: Impementation utilizes two's complement
@@ -347,9 +350,13 @@ __device__ void RecDecimal(unsigned int a, unsigned int pw, Decimal* b, Decimal 
     }
 }
 
-__global__ void calcRow(CUdeviceptr arr, char* re, char* im, int reLen, int imLen, int prec) {
+// go from row 'offst' and jump rows by 'skip' for 'frames'
+
+__global__ void worker(int* arr, char* re, char* im, int reLen, int imLen, int prec, int offst, int skip, int frames, int *ctSig, int*dnSig) {
     
 }
+
+__global__ void syncer()
 
 int main()
 {
@@ -358,17 +365,5 @@ int main()
     ifstream in("in.txt");
     double re, im, zoom;
     in >> re >> im >> zoom;
-    const int xSz = 4096, ySz = 2160;
-    CUdeviceptr arr=0;
-    int res = cuMemAlloc(&arr, xSz * ySz * 3); // In case not enough memory
-    if (res != cudaSuccess) {
-        cerr << "ERROR!"<<res;
-        return res;
-    }
-    cout << "Malloc\n";
-    //calcRow <<<1, ySz >>> (arr);
-    cudaDeviceSynchronize();
-    cuMemFree(arr);
-    cout << "Done!";
     return 0;
 }
