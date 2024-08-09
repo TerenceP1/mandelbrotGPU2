@@ -350,13 +350,45 @@ __device__ void RecDecimal(unsigned int a, unsigned int pw, Decimal* b, Decimal 
     }
 }
 
+struct workerParams {
+    unsigned int zoom; // zoom * 2^(32*zoom2)
+    unsigned int zoom2;
+    int prec;
+    int** out; // Array of arrays of output
+    int numFr; // Frames per caluclation
+    struct _dummyone{
+        char* re;
+        int reLen;
+        char* im;
+        int imLen;
+    } posDat; // date about where the zoom is centered
+    struct _dummytwo {
+        int offset; // where to start
+        int skip; // how many rows to jump by
+    } frameGen; // data on what rows to gen
+    struct _dummythree {
+        int offset;
+        int skip;
+    } frameOrder; // same as frameGen but for placement of frames
+    struct _dummyfour {
+        int* compSig; // Incremented when a row is done
+        int* beginSig; // Set to one when it is time to start
+        int* contSig; // Incremented when it is done data transfering
+    } sigs;
+};
+
+struct syncerParams {
+    int* beginSig; // Set to one to start
+    int* readySig; // Set to one when it is ready to be memcpy-ed
+};
+
 // go from row 'offst' and jump rows by 'skip' for 'frames'
 
-__global__ void worker(int* arr, char* re, char* im, int reLen, int imLen, int prec, int offst, int skip, int frames, int *ctSig, int*dnSig) {
+__global__ void worker() {
     
 }
 
-__global__ void syncer()
+__global__ void syncer(int* arr)
 
 int main()
 {
