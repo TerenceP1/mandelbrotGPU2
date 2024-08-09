@@ -316,7 +316,7 @@ __device__ void CmemRecDecimal(unsigned int a, Decimal* b, Decimal tmp, Decimal 
     }
 }
 
-__device__ void RecDecimal(unsigned int a, unsigned int pw, Decimal* b, Decimal tmp, Decimal inc, Decimal one) {
+__device__ void CmemRecDecimal(unsigned int a, unsigned int pw, Decimal* b, Decimal tmp, Decimal inc, Decimal one) {
     // Take reciprical of a * 2 ^ (pw * 32) and store it in b
     // Consumes auxillary space
     unsigned int* bi = *((unsigned int**)b);
@@ -375,6 +375,12 @@ struct workerParams {
         int* beginSig; // Set to one when it is time to start
         int* contSig; // Incremented when it is done data transfering
     } sigs;
+    struct _dummyfive {
+        Decimal* one; // For CmemRecDecimal
+        Decimal* inc; // For CmemRecDecimal
+        Decimal* tmp; // For CmemRecDecimal
+        unisgned int* temp; // For CmemMulDecimal
+    } cmemParams;
 };
 
 struct syncerParams {
