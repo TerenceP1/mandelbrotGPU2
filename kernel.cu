@@ -381,6 +381,16 @@ struct workerParams {
         Decimal* tmp; // For CmemRecDecimal
         unisgned int* temp; // For CmemMulDecimal
     } cmemParams;
+    strict _dummysix {
+        Decimal* re;
+        Decimal* im;
+        Decimal* tenth;
+        Decimal* dgs; // array of decimals length ten
+        Decimal* cRe;
+        Decimal* cIm;
+        Decimal* nRe;
+        Decimal* nIm;
+    } preTmpInits;
 };
 
 struct syncerParams {
