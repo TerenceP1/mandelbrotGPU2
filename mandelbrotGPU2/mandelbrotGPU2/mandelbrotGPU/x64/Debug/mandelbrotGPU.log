@@ -1,0 +1,92 @@
+﻿  Compiling CUDA source file kernel.cu...
+  
+  C:\Users\teren\Documents\Programming\C++\x-camp\vs2022\mandelbrotGPU>"C:\Users\teren\Documents\CUDA\bin\nvcc.exe" -gencode=arch=compute_52,code=\"sm_52,compute_52\" --use-local-env -ccbin "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\bin\HostX64\x64" -x cu -rdc=true  -IC:\Users\teren\Documents\CUDA\include -I"C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\include" -IC:\Users\teren\Documents\CUDA\include  -G   --keep-dir mandelbrotGPU\x64\Debug  -maxrregcount=0   --machine 64 --compile -cudart static  -g  -DWIN32 -DWIN64 -D_DEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /FS /Zi /RTC1 /MDd " -Xcompiler "/FdmandelbrotGPU\x64\Debug\vc143.pdb" -o C:\Users\teren\Documents\Programming\C++\x-camp\vs2022\mandelbrotGPU\mandelbrotGPU\x64\Debug\kernel.cu.obj "C:\Users\teren\Documents\Programming\C++\x-camp\vs2022\mandelbrotGPU\kernel.cu" 
+C:\Users\teren\Documents\Programming\C++\x-camp\vs2022\mandelbrotGPU\kernel.cu(73): warning #63-D: shift count is too large
+            bool pas = (pass && 0x100000000l) >> 32;
+                                                 ^
+  
+  Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+  
+C:\Users\teren\Documents\Programming\C++\x-camp\vs2022\mandelbrotGPU\kernel.cu(73): warning #63-D: shift count is too large
+            bool pas = (pass && 0x100000000l) >> 32;
+                                                 ^
+  
+  Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+  
+  kernel.cu
+  tmpxft_00005320_00000000-7_kernel.cudafe1.cpp
+  
+  C:\Users\teren\Documents\Programming\C++\x-camp\vs2022\mandelbrotGPU>"C:\Users\teren\Documents\CUDA\bin\nvcc.exe" -dlink  -o mandelbrotGPU\x64\Debug\mandelbrotGPU.device-link.obj -Xcompiler "/EHsc /W3 /nologo /Od /Zi /RTC1 /MDd " -Xcompiler "/FdmandelbrotGPU\x64\Debug\vc143.pdb" -LC:\Users\teren\Documents\CUDA\bin/crt -LC:\Users\teren\Documents\CUDA\lib\x64 -L"C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib" -L"C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\manual-link" cudart_static.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib cudart.lib cudadevrt.lib "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\bz2d.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\flatbuffers.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\gmp.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\gmpxx.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\jpeg.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\libexpatd.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\libpng16d.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\libprotobuf-lited.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\libprotobufd.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\libprotocd.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\libsharpyuv.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\libwebp.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\libwebpdecoder.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\libwebpdemux.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\libwebpmux.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\lzma.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\opencv_calib3d4d.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\opencv_core4d.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\opencv_dnn4d.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\opencv_features2d4d.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\opencv_flann4d.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\opencv_highgui4d.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\opencv_imgcodecs4d.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\opencv_imgproc4d.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\opencv_ml4d.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\opencv_objdetect4d.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\opencv_photo4d.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\opencv_stitching4d.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\opencv_video4d.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\opencv_videoio4d.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\pcre2-16d.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\pcre2-32d.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\pcre2-8d.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\pcre2-posixd.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\PocoActiveRecordd.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\PocoCppParserd.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\PocoDatad.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\PocoDataODBCd.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\PocoEncodingsd.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\PocoFoundationd.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\PocoJSONd.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\PocoMongoDBd.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\PocoNetd.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\PocoPrometheusd.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\PocoRedisd.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\PocoSevenZipd.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\PocoUtild.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\PocoXMLd.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\PocoZipd.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\quirc.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\tiffd.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\turbojpeg.lib" "C:\Users\teren\Downloads\__trash__\gmp-6.3.0\vcpkg-master\vcpkg-master\installed\x64-windows\debug\lib\zlibd.lib"  -gencode=arch=compute_52,code=sm_52 -G  "C:\Users\teren\Documents\Programming\C++\x-camp\vs2022\mandelbrotGPU\mandelbrotGPU\x64\Debug\kernel.cu.obj" 
+  cudart_static.lib
+  kernel32.lib
+  user32.lib
+  gdi32.lib
+  winspool.lib
+  comdlg32.lib
+  advapi32.lib
+  shell32.lib
+  ole32.lib
+  oleaut32.lib
+  uuid.lib
+  odbc32.lib
+  odbccp32.lib
+  cudart.lib
+  cudadevrt.lib
+  bz2d.lib
+  flatbuffers.lib
+  gmp.lib
+  gmpxx.lib
+  jpeg.lib
+  libexpatd.lib
+  libpng16d.lib
+  libprotobuf-lited.lib
+  libprotobufd.lib
+  libprotocd.lib
+  libsharpyuv.lib
+  libwebp.lib
+  libwebpdecoder.lib
+  libwebpdemux.lib
+  libwebpmux.lib
+  lzma.lib
+  opencv_calib3d4d.lib
+  opencv_core4d.lib
+  opencv_dnn4d.lib
+  opencv_features2d4d.lib
+  opencv_flann4d.lib
+  opencv_highgui4d.lib
+  opencv_imgcodecs4d.lib
+  opencv_imgproc4d.lib
+  opencv_ml4d.lib
+  opencv_objdetect4d.lib
+  opencv_photo4d.lib
+  opencv_stitching4d.lib
+  opencv_video4d.lib
+  opencv_videoio4d.lib
+  pcre2-16d.lib
+  pcre2-32d.lib
+  pcre2-8d.lib
+  pcre2-posixd.lib
+  PocoActiveRecordd.lib
+  PocoCppParserd.lib
+  PocoDatad.lib
+  PocoDataODBCd.lib
+  PocoEncodingsd.lib
+  PocoFoundationd.lib
+  PocoJSONd.lib
+  PocoMongoDBd.lib
+  PocoNetd.lib
+  PocoPrometheusd.lib
+  PocoRedisd.lib
+  PocoSevenZipd.lib
+  PocoUtild.lib
+  PocoXMLd.lib
+  PocoZipd.lib
+  quirc.lib
+  tiffd.lib
+  turbojpeg.lib
+  zlibd.lib
+  kernel.cu.obj
+  LINK : C:\Users\teren\Documents\Programming\C++\x-camp\vs2022\mandelbrotGPU\x64\Debug\mandelbrotGPU.exe not found or not built by the last incremental link; performing full link
+     Creating library C:\Users\teren\Documents\Programming\C++\x-camp\vs2022\mandelbrotGPU\x64\Debug\mandelbrotGPU.lib and object C:\Users\teren\Documents\Programming\C++\x-camp\vs2022\mandelbrotGPU\x64\Debug\mandelbrotGPU.exp
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  mandelbrotGPU.vcxproj -> C:\Users\teren\Documents\Programming\C++\x-camp\vs2022\mandelbrotGPU\x64\Debug\mandelbrotGPU.exe
