@@ -381,7 +381,7 @@ struct workerParams {
         Decimal* tmp; // For CmemRecDecimal
         unisgned int* temp; // For CmemMulDecimal
     } cmemParams;
-    strict _dummysix {
+    struct _dummysix {
         Decimal* re;
         Decimal* im;
         Decimal* tenth;
