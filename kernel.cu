@@ -400,7 +400,7 @@ struct syncerParams {
 
 // go from row 'offst' and jump rows by 'skip' for 'frames'
 
-__global__ void worker() {
+__global__ void worker(workerParams** in) {
     
 }
 
