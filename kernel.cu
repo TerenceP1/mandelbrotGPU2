@@ -396,6 +396,7 @@ struct workerParams {
 struct syncerParams {
     int* beginSig; // Set to one to start
     int* readySig; // Set to one when it is ready to be memcpy-ed
+    int* rowsC; // Incremented for each row
 };
 
 // go from row 'offst' and jump rows by 'skip' for 'frames'
