@@ -39,6 +39,16 @@ __device__ void InitDecimal(Decimal* d) {
     }
 }
 
+__device__ void CpyDecimal(Decimal* a, Decimal* b) {
+    // Copy a to b
+    unsigned int* ai = (*((unsigned int**)a));
+    int dp = (*((unsigned int**)a))[0];
+    undigned int* bi = (*((unsigned int**)b));
+    for (int i = 1;i <= dp;i++) {
+        bi[i] = ai[i];
+    }
+}
+
 __device__ void AddDecimal(Decimal* a, Decimal* b, Decimal* c) {
     // Adds a and b and stores result in c
     unsigned long long pass = 0;
