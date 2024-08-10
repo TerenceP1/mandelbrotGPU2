@@ -43,7 +43,7 @@ __device__ void CpyDecimal(Decimal* a, Decimal* b) {
     // Copy a to b
     unsigned int* ai = (*((unsigned int**)a));
     int dp = (*((unsigned int**)a))[0];
-    undigned int* bi = (*((unsigned int**)b));
+    unsigned int* bi = (*((unsigned int**)b));
     for (int i = 1;i <= dp;i++) {
         bi[i] = ai[i];
     }
